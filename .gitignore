@@ -1,0 +1,45 @@
+## Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+
+## Visual Studio / Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+Folder.DotSettings.user
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Sensitive files
+appsettings.Local.json
+*.http
+data.sql
+
+## OS files
+.DS_Store
+Thumbs.db
