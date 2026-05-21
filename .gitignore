@@ -47,3 +47,6 @@ data.sql
 ## OS files
 .DS_Store
 Thumbs.db
+
+## Claude
+.claude/
