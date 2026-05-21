@@ -112,10 +112,17 @@ O arquivo já está no [`.gitignore`](../.gitignore). Configure no `Program.cs`/
 
 ## Banco de dados local
 
-Schema em [`data.sql`](../data.sql). Aplique antes do primeiro `dotnet run`:
+Os scripts SQL ficam no diretório [`sql/`](../sql/) na raiz do projeto:
+
+| Arquivo | Propósito |
+|---------|-----------|
+| [`sql/data.sql`](../sql/data.sql) | Schema (DDL) das tabelas de controle + seed de `migration_settings` |
+| [`sql/scriptDML-replace.sql`](../sql/scriptDML-replace.sql) | DML utilitário (inspeção e reset) usado durante desenvolvimento |
+
+Aplique o schema antes do primeiro `dotnet run`:
 
 ```bash
-mysql -u root -p laboratorio < data.sql
+mysql -u root -p laboratorio < sql/data.sql
 ```
 
 O script cria `anexo_migration_status` e `migration_settings`, mas **assume que a tabela `anexo` já existe** (vem do sistema legado). Em ambiente experimental, pode criar manualmente uma `anexo` simples:
@@ -133,7 +140,7 @@ CREATE TABLE anexo (
 );
 ```
 
-O `data.sql` insere uma linha em `migration_settings` (`id = 1`) com valores padrão razoáveis para dev.
+O `sql/data.sql` insere uma linha em `migration_settings` (`id = 1`) com valores padrão razoáveis para dev.
 
 ## Deploy com Docker
 

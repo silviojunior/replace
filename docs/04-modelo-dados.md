@@ -1,6 +1,6 @@
 # 04 — Modelo de Dados
 
-Três tabelas no MySQL e uma estrutura de pastas no S3. Schema canônico em [`data.sql`](../data.sql).
+Três tabelas no MySQL e uma estrutura de pastas no S3. Schema canônico em [`sql/data.sql`](../sql/data.sql). Comandos DML utilitários (inspeção e reset durante desenvolvimento) em [`sql/scriptDML-replace.sql`](../sql/scriptDML-replace.sql).
 
 ## Visão geral
 
@@ -36,6 +36,8 @@ Mapeamento: [Anexo.cs](../src/Domain/Models/Anexo.cs).
 A coluna `filepath` é a **ponte entre o estado antigo e o novo**: depois da migração, o sistema legado pode usar `filepath` para construir uma URL de download do S3.
 
 Após `MarkAsCompleted`, **se `purge_files = true`**, o RePlace zera `anexo` (BLOB) mas preserva `filepath`. Veja [FileMigrationService.cs:139-141](../src/Application/Services/FileMigrationService.cs#L139).
+
+> **Para regenerar massa em ambiente local** (tabela `anexo` vazia ou com BLOBs já purgados), use o projeto irmão **Phill** — ele popula `anexo` com arquivos reais. Instruções em [08 — Desenvolvimento e Testes, §3.1](./08-desenvolvimento-testes.md#31-popular-anexo-com-massa-de-teste-phill).
 
 ## Tabela `anexo_migration_status` (controle)
 

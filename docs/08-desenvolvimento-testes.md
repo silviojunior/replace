@@ -31,10 +31,53 @@ docker run -d \
 ### 3. Aplicar schema
 
 ```bash
-mysql -h 127.0.0.1 -u root -p laboratorio < data.sql
+mysql -h 127.0.0.1 -u root -p laboratorio < sql/data.sql
 ```
 
-> Lembre-se: `data.sql` assume que a tabela `anexo` já existe. Para ambiente puramente experimental, crie uma versão simples como descrito em [07 — Configuração](./07-configuracao-deploy.md#banco-de-dados-local).
+> Lembre-se: `sql/data.sql` assume que a tabela `anexo` já existe. Para ambiente puramente experimental, crie uma versão simples como descrito em [07 — Configuração](./07-configuracao-deploy.md#banco-de-dados-local).
+>
+> Para inspecionar estado ou resetar tabelas durante desenvolvimento, há comandos prontos em [`sql/scriptDML-replace.sql`](../sql/scriptDML-replace.sql) — seleção, limpeza de `anexo`/`anexo_migration_status`, reset de auto-increment e toggles de `migration_settings`.
+
+### 3.1 Popular `anexo` com massa de teste (Phill)
+
+O RePlace **só tem o que migrar se existirem linhas em `anexo` com `AnexoBlob` preenchido**. Se você está em qualquer um destes cenários:
+
+- Tabela `anexo` **vazia** (primeira execução, base nova).
+- BLOBs já foram **purgados** por uma execução anterior com `purge_files = true` (`anexo.anexo IS NULL`).
+- Quer **regenerar** massa para repetir um teste de migração do zero.
+
+…use o projeto irmão **[Phill](../../phill)** (Spring Boot, Java 17). Ele popula `anexo` com arquivos reais (PDFs, imagens, DOCX) embarcados, persistidos como `LONGBLOB`, até atingir um limite de tamanho configurável (padrão 500 MB).
+
+**Resumo do uso:**
+
+```bash
+cd C:/dev/phill        # ou o caminho onde clonou o repo
+# Definir env vars na Run Configuration da IDE (IntelliJ → Run/Debug Configurations):
+#   DB_URL=jdbc:mysql://localhost:3306/laboratorio?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#   DB_USERNAME=root
+#   DB_PASSWORD=...
+#   JPA_DDL_AUTO=update
+#   PHILL_MAX_SIZE=500MB
+mvnw.cmd spring-boot:run     # Windows  (ou ./mvnw spring-boot:run em Linux/macOS)
+```
+
+Após a execução, confirme com:
+
+```sql
+SELECT tipo_anexo_id, COUNT(*) AS qtd, SUM(tamanho) AS bytes
+FROM anexo
+GROUP BY tipo_anexo_id;
+```
+
+Documentação completa em [`phill/docs/phill-documentation.md`](../../phill/docs/phill-documentation.md).
+
+> **Atenção — duplicidade**: o Phill *acrescenta* registros a cada execução (não há controle de unicidade). Se rodar várias vezes seguidas, faça `TRUNCATE TABLE anexo` antes para evitar inflar a base.
+>
+> **Após purge_files = true**: o Phill não "recompõe" os BLOBs nos registros antigos — ele cria registros *novos*. Os antigos continuam com `anexo IS NULL`. Para repetir um teste do zero, limpe `anexo` e `anexo_migration_status` antes:
+> ```sql
+> TRUNCATE TABLE anexo_migration_status;
+> TRUNCATE TABLE anexo;
+> ```
 
 ### 4. Configurar credenciais
 

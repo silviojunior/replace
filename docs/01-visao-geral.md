@@ -57,7 +57,7 @@ A API tem **uma fonte (MySQL)** e **um destino (S3)**. Toda a inteligência fica
 
 - **Não é proxy de download**: nada lê arquivos do S3 *através* da API. Quem precisa de um arquivo migrado deve ler a coluna `anexo.filepath` e baixar diretamente.
 - **Não faz limpeza retroativa**: arquivos que já foram migrados (e que tinham o BLOB zerado por `purge_files`) não voltam ao banco.
-- **Não migra estrutura**: o RePlace assume que as tabelas `anexo`, `anexo_migration_status` e `migration_settings` já existem (ver [04 — Modelo de Dados](./04-modelo-dados.md) e [`data.sql`](../data.sql)).
+- **Não migra estrutura**: o RePlace assume que as tabelas `anexo`, `anexo_migration_status` e `migration_settings` já existem (ver [04 — Modelo de Dados](./04-modelo-dados.md) e [`sql/data.sql`](../sql/data.sql)).
 - **Não envia notificações**: falhas precisam ser observadas via logs ou pelo endpoint de status.
 
 ## Próximo passo

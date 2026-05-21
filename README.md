@@ -11,7 +11,7 @@ API .NET 9 que migra arquivos binários (anexos) armazenados como `BLOB` no MySQ
 dotnet restore
 
 # 2. Subir MySQL e aplicar schema
-mysql -u root -p laboratorio < data.sql
+mysql -u root -p laboratorio < sql/data.sql
 
 # 3. Configurar variáveis de ambiente (na Run Configuration da IDE)
 #    Use padrão `__` (duplo underscore) — ver docs/07
@@ -50,7 +50,7 @@ RePlace/
 ├── Program.cs                  # Entry point + DI
 ├── Dockerfile                  # Build multi-stage
 ├── docker-compose.yml          # Orquestração local
-├── data.sql                    # Schema MySQL
+├── sql/                        # Schema (data.sql) e utilitários DML
 └── .env.example                # Template de variáveis de ambiente
 ```
 

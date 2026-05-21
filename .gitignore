@@ -42,7 +42,7 @@ appsettings.*.Local.json
 .env.*
 !.env.example
 *.http
-data.sql
+sql/data.sql
 
 ## OS files
 .DS_Store
