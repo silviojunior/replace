@@ -34,5 +34,4 @@ public class Anexo
     [Column("filepath")]
     [MaxLength(500)]
     public string? Filepath { get; set; } = string.Empty;
-    
 }

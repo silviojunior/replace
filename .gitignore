@@ -37,6 +37,10 @@ artifacts/
 
 ## Sensitive files
 appsettings.Local.json
+appsettings.*.Local.json
+.env
+.env.*
+!.env.example
 *.http
 data.sql
 

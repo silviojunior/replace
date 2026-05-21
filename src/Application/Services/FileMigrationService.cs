@@ -109,7 +109,6 @@ public class FileMigrationService : IFileMigrationUseCase
             status.ProcessingPodId = podId;
             status.ProcessingStartedAt = DateTime.UtcNow;
             status.LockExpiresAt = lockExpires;
-            status.RetryCount++;
             _dbContext.AnexoMigrationStatus.Update(status);
         }
     }
@@ -190,7 +189,6 @@ public class FileMigrationService : IFileMigrationUseCase
         if (anexo.AnexoBlob == null || anexo.AnexoBlob.Length == 0)
             throw new ArgumentException("Conteúdo do anexo vazio ou nulo");
 
-        using var md5 = MD5.Create();
         var hashBytes = MD5.HashData(anexo.AnexoBlob);
         var checksum = Convert.ToHexStringLower(hashBytes);
 

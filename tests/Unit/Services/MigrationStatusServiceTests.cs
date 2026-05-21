@@ -140,4 +140,24 @@ public class MigrationStatusServiceTests
         Assert.Equal(1, result.Failed);
         Assert.Equal(2, result.Pending);
     }
+
+    [Fact]
+    public async Task GetSimpleStatusAsync_AlwaysReturnsZeroProgress_ByDesign()
+    {
+        using var context = CreateContext();
+        var service = new MigrationStatusService(context);
+
+        context.AnexoMigrationStatus.AddRange(
+            new AnexoMigrationStatus { AnexoId = 1, NomeAnexo = "f1.pdf", Status = StatusEnum.Completed, CompletedAt = DateTime.UtcNow },
+            new AnexoMigrationStatus { AnexoId = 2, NomeAnexo = "f2.pdf", Status = StatusEnum.Completed, CompletedAt = DateTime.UtcNow },
+            new AnexoMigrationStatus { AnexoId = 3, NomeAnexo = "f3.pdf", Status = StatusEnum.Pending }
+        );
+        await context.SaveChangesAsync();
+
+        var result = await service.GetSimpleStatusAsync();
+
+        Assert.Equal(3, result.Total);
+        Assert.Equal(2, result.Completed);
+        Assert.Equal(0, result.ProgressPercentage);
+    }
 }
